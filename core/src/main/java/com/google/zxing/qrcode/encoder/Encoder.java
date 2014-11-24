@@ -76,6 +76,12 @@ public final class Encoder {
                               ErrorCorrectionLevel ecLevel,
                               Map<EncodeHintType,?> hints) throws WriterException {
 
+    // Determine set specific version
+    QRCodeVersion setQrCodeVersion = hints == null ? null : (QRCodeVersion) hints.get(EncodeHintType.QRCODE_VERSION);
+    int setQrCodeVersionNumber = -1;
+    if(setQrCodeVersion != null) {
+        setQrCodeVersionNumber = setQrCodeVersion.getVersion();
+    }
     // Determine what character encoding has been specified by the caller, if any
     String encoding = hints == null ? null : (String) hints.get(EncodeHintType.CHARACTER_SET);
     if (encoding == null) {
@@ -121,6 +127,10 @@ public final class Encoder {
         + mode.getCharacterCountBits(provisionalVersion)
         + dataBits.getSize();
     Version version = chooseVersion(bitsNeeded, ecLevel);
+    
+    if(setQrCodeVersionNumber != -1 && version.getVersionNumber() < setQrCodeVersionNumber) {
+        version = version.getVersionForNumber(setQrCodeVersionNumber);
+    }
 
     BitArray headerAndDataBits = new BitArray();
     headerAndDataBits.appendBitArray(headerBits);

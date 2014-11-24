@@ -83,4 +83,9 @@ public enum EncodeHintType {
    *   a positive number (1, 2, .. 32) specifies a normaol (non-compact) Aztec code
    */
    AZTEC_LAYERS,
+   
+  /**
+   * BB set qrcode version
+   */
+   QRCODE_VERSION,
 }
